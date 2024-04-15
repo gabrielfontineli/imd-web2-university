@@ -44,8 +44,8 @@ public class AlunoController {
     public ResponseEntity<List<Aluno>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(alunoRepository.findAll());
     }
-    @GetMapping("/get")
-    public ResponseEntity<Aluno> getAluno(@RequestParam Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Aluno> getAluno(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(alunoRepository.findById(id).get());
     }
     @PutMapping("/{id}")

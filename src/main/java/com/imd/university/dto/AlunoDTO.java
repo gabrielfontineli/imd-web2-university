@@ -7,7 +7,8 @@ import com.imd.university.model.Genero;
 public record AlunoDTO(
     String nome,
     String id,
-    @CPF String cpf,
+    @CPF(message = "CPF inválido")
+    String cpf,
     LocalDate dataNascimento,
     String curso,
     int matricula,

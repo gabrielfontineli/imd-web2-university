@@ -73,6 +73,4 @@ public class AlunoController {
         return ResponseEntity.status(HttpStatus.OK).body("Aluno deletado com sucesso");
     }
 
-
-    
 }

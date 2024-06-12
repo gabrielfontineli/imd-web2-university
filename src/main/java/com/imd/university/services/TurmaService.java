@@ -99,7 +99,7 @@ public class TurmaService {
    }
     // desmatricular aluno
     public boolean desmatricularAluno(Long id, Long alunoId){
-        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+        Optional<Turma> turmaOptional = getTurma(id);
         if(turmaOptional.isEmpty()) {
             return false;
         }
@@ -132,7 +132,7 @@ public class TurmaService {
     // remover professor
 
     public boolean removerProfessor(Long id, Long professorId){
-        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+        Optional<Turma> turmaOptional = getTurma(id);
         if(turmaOptional.isEmpty()) {
             return false;
         }

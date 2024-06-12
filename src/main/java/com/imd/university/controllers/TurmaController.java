@@ -31,17 +31,17 @@ public class TurmaController {
         return ResponseEntity.status(HttpStatus.OK).body(turmaService.listTurmas());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Turma> getTurma(@RequestParam Long id) {
+    public ResponseEntity<Turma> findOne(@RequestParam Long id) {
         Turma turma = turmaService.getTurma(id)
         .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
         return ResponseEntity.status(HttpStatus.OK).body(turma);
     }
     @PostMapping("/create")
-    public ResponseEntity<Turma> insertTurma(@RequestBody TurmaDTO entity) {
+    public ResponseEntity<Turma> insertOne(@RequestBody TurmaDTO entity) {
         return ResponseEntity.status(HttpStatus.CREATED).body(turmaService.createTurma(entity));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Turma> updateTurma(@RequestBody TurmaDTO entity, @RequestParam Long id) {
+    public ResponseEntity<Turma> updateOne(@RequestBody TurmaDTO entity, @RequestParam Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(turmaService.updateTurma(id, entity));
     }
     // matricular aluno
@@ -54,9 +54,28 @@ public class TurmaController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
+    // remover aluno
+    @PostMapping("/disenroll/{idTurma}")
+    public ResponseEntity<Turma> desmatricularAluno(@PathVariable Long idTurma, @RequestParam Long idAluno) {
+        if (turmaService.desmatricularAluno(idTurma, idAluno)) {
+            Turma turma = turmaService.getTurma(idTurma)
+            .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
+            return ResponseEntity.status(HttpStatus.OK).body(turma);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
     @PostMapping("/associate/{idTurma}")
     public ResponseEntity<Turma> adicionarProfessor(@PathVariable Long idTurma, @RequestParam Long idProfessor) {
         if (turmaService.adicionarProfessor(idTurma, idProfessor)) {
+            Turma turma = turmaService.getTurma(idTurma)
+            .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
+            return ResponseEntity.status(HttpStatus.OK).body(turma);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+    @PostMapping("/disassociate/{idTurma}")
+    public ResponseEntity<Turma> removerProfessor(@PathVariable Long idTurma, @RequestParam Long idProfessor) {
+        if (turmaService.removerProfessor(idTurma, idProfessor)) {
             Turma turma = turmaService.getTurma(idTurma)
             .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
             return ResponseEntity.status(HttpStatus.OK).body(turma);

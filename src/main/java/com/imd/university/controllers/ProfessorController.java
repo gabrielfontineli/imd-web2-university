@@ -31,29 +31,34 @@ public class ProfessorController {
     private ProfessorService professorService;
 
     @PostMapping("create")
-    public ResponseEntity<Professor> insertProfessor(@Valid @RequestBody ProfessorDTO entity) {
+    public ResponseEntity<Professor> insertOne(@Valid @RequestBody ProfessorDTO entity) {
         return ResponseEntity.status(HttpStatus.CREATED).body(professorService.createProfessor(entity));
     }
     @GetMapping
-    public ResponseEntity<List<Professor>> getAll() {
+    public ResponseEntity<List<Professor>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(professorService.listProfessors());
     }
-
-    //testar 
     @GetMapping("/{id}")
-    public ResponseEntity<Professor> getProfessor(@PathVariable Long id) {
+    public ResponseEntity<Professor> findOne(@PathVariable Long id) {
         Professor professor = professorService.getProfessor(id)
                 .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
         return ResponseEntity.status(HttpStatus.OK).body(professor);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Professor> updateProfessor(@RequestBody ProfessorDTO entity, @PathVariable Long id) {
+    public ResponseEntity<Professor> updateOne(@RequestBody ProfessorDTO entity, @PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(professorService.updateProfessor(id, entity));
     }
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteProfessor(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteOne(@PathVariable Long id) {
         if (professorService.deleteProfessor(id)) {
             return ResponseEntity.status(HttpStatus.OK).body("Professor deletado com sucesso");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Professor não encontrado");
+    }
+    @DeleteMapping("/disable/{id}")
+    public ResponseEntity<String> disableOne(@PathVariable Long id) {
+        if (professorService.desativarProfessor(id)) {
+            return ResponseEntity.status(HttpStatus.OK).body("Professor desativado com sucesso");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Professor não encontrado");
     }

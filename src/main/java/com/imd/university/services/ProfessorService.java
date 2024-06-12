@@ -31,8 +31,8 @@ public class ProfessorService {
     public List<Professor> listProfessors() {
         return professorRepository.findAll();
     }
-    public Professor getProfessor(Long id) {
-        return professorRepository.findById(id).get();
+    public Optional<Professor> getProfessor(Long id) {
+        return professorRepository.findById(id);
     }
     public Professor updateProfessor(Long id, ProfessorDTO professorDTO) {
         Optional<Professor> isProfessor = professorRepository.findById(id);
@@ -60,7 +60,7 @@ public class ProfessorService {
         return false;
     }
     public boolean desativarProfessor(long id){
-        Optional<Professor> professor = professorRepository.findById(id);
+        Optional<Professor> professor = getProfessor(id);
         if(professor.isEmpty()){
             return false;
         }

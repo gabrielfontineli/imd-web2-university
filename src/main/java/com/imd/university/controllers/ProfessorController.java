@@ -44,7 +44,9 @@ public class ProfessorController {
     //testar 
     @GetMapping("/{id}")
     public ResponseEntity<Professor> getProfessor(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(professorService.getProfessor(id));
+        Professor professor = professorService.getProfessor(id)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+        return ResponseEntity.status(HttpStatus.OK).body(professor);
     }
     @PutMapping("/{id}")
     public ResponseEntity<Professor> updateProfessor(@RequestBody ProfessorDTO entity, @PathVariable Long id) {

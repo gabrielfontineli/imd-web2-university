@@ -25,9 +25,13 @@ import lombok.NoArgsConstructor;
 public class TurmaService {
     @Autowired
     private TurmaRepository turmaRepository;
+    @Autowired
+    private AlunoService alunoService;
+    @Autowired ProfessorService professorService;
 
-    public TurmaService(TurmaRepository turmaRepository) {
+    public TurmaService(TurmaRepository turmaRepository, AlunoService alunoService) {
         this.turmaRepository = turmaRepository;
+        this.alunoService = alunoService;
     }
 
     public List<Turma> listTurmas() {
@@ -35,8 +39,8 @@ public class TurmaService {
     }
     // get turma by id
     
-    public Turma getTurma(long id) {
-        return turmaRepository.findById(id).get();
+    public Optional<Turma> getTurma(long id) {
+        return turmaRepository.findById(id);
     }
     // save turma
     
@@ -49,7 +53,7 @@ public class TurmaService {
     // update turma
     
     public Turma updateTurma(Long id, TurmaDTO turmaDTO) {
-        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+        Optional<Turma> turmaOptional = getTurma(id);
         if(!turmaOptional.isPresent()) {
             return null;
         }
@@ -60,7 +64,7 @@ public class TurmaService {
     // delete turma
     
     public boolean deleteTurma(Long id) {
-        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+        Optional<Turma> turmaOptional = getTurma(id);
         if(turmaOptional.isEmpty()) {
             return false;
         }
@@ -70,7 +74,7 @@ public class TurmaService {
     
     // delete logic
     public boolean deleteTurmaLogic(Long id){
-        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+        Optional<Turma> turmaOptional = getTurma(id);
         if(turmaOptional.isEmpty()) {
             return false;
         }
@@ -80,14 +84,17 @@ public class TurmaService {
         return true;
     }
     // matricular aluno
-   public boolean matricularAluno(Long id, AlunoDTO alunoDTO){
-        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+   public boolean matricularAluno(Long id, Long alunoId){
+        Optional<Turma> turmaOptional = getTurma(id);
         if(turmaOptional.isEmpty()) {
             return false;
         }
         Turma turma = turmaOptional.get();
-        Aluno aluno = new Aluno();
-        BeanUtils.copyProperties(alunoDTO, aluno);
+        Optional<Aluno> alunoOptional = alunoService.getAluno(alunoId);
+        if(alunoOptional.isEmpty()) {
+            return false;
+        }
+        Aluno aluno = alunoOptional.get();
         turma.getAlunos().add(aluno);
         turmaRepository.save(turma);
         return true;
@@ -99,19 +106,27 @@ public class TurmaService {
             return false;
         }
         Turma turma = turmaOptional.get();
-        turma.getAlunos().removeIf(aluno -> aluno.getId() == alunoId);
+        Optional<Aluno> alunoOptional = alunoService.getAluno(alunoId);
+        if(alunoOptional.isEmpty()) {
+            return false;
+        }
+        Aluno aluno = alunoOptional.get();
+        turma.getAlunos().remove(aluno);
         turmaRepository.save(turma);
         return true;
     }
     // adicionar professor
-    public boolean adicionarProfessor(Long id, ProfessorDTO professorDTO){
-        Optional<Turma> turmaOptional = turmaRepository.findById(id);
+    public boolean adicionarProfessor(Long id, Long professorId){
+        Optional<Turma> turmaOptional = getTurma(id);
         if(turmaOptional.isEmpty()) {
             return false;
         }
         Turma turma = turmaOptional.get();
-        Professor professor = new Professor();
-        BeanUtils.copyProperties(professorDTO, professor);
+        Optional<Professor> professorOptional = professorService.getProfessor(professorId);
+        if(professorOptional.isEmpty()) {
+            return false;
+        }
+        Professor professor = professorOptional.get();
         turma.setProfessorDisciplina(professor);
         turmaRepository.save(turma);
         return true;

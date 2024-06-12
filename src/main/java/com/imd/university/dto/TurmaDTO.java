@@ -12,7 +12,6 @@ public record TurmaDTO(
     String nome,
     String codigo,
     List<Aluno> alunos,
-    @NotBlank(message = "Turma deve ter professor responsável")
     Professor professorDisciplina
 ) {
 }

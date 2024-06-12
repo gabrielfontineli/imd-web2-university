@@ -7,8 +7,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.imd.university.dto.AlunoDTO;
-import com.imd.university.dto.ProfessorDTO;
 import com.imd.university.dto.TurmaDTO;
 import com.imd.university.model.Aluno;
 import com.imd.university.model.Professor;

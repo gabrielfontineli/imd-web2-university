@@ -16,16 +16,16 @@ import com.imd.university.dto.AlunoDTO;
 import com.imd.university.model.Aluno;
 import com.imd.university.repository.AlunoRepository;
 
+import lombok.NoArgsConstructor;
+
 @Service
+@NoArgsConstructor
 public class AlunoService {
     @Autowired
     private AlunoRepository alunoRepository;
 
     public AlunoService(AlunoRepository alunoRepository) {
         this.alunoRepository = alunoRepository;
-    }
-
-    public AlunoService() {
     }
 
     //create aluno
@@ -46,7 +46,7 @@ public class AlunoService {
 
     public Aluno updateAluno(Long id, AlunoDTO alunoDTO) {
         Optional<Aluno> alunoOptional = alunoRepository.findById(id);
-        if(!alunoOptional.isEmpty()) {
+        if (alunoOptional.isEmpty()) {
             throw new RuntimeException("Aluno não encontrado");
         }
         Aluno aluno = alunoOptional.get();
@@ -59,7 +59,6 @@ public class AlunoService {
         Optional.ofNullable(alunoDTO.genero()).ifPresent(aluno::setGenero);
         Optional.ofNullable(alunoDTO.curso()).ifPresent(aluno::setCurso);
         Optional.ofNullable(alunoDTO.dataNascimento()).ifPresent(aluno::setDataNascimento);
-        //BeanUtils.copyProperties(alunoDTO, aluno);
         return alunoRepository.save(aluno);
     }
     public Optional<Aluno> getAluno(long id) {
@@ -74,5 +73,15 @@ public class AlunoService {
     }
     public List<Aluno> listAlunos() {
         return alunoRepository.findAll();
+    }
+    public boolean desativarAluno(long id) {
+        Optional<Aluno> alunoOptional = alunoRepository.findById(id);
+        if (alunoOptional.isEmpty()) {
+            return false;
+        }
+        Aluno aluno = alunoOptional.get();
+        aluno.desativarAluno();
+        alunoRepository.save(aluno);
+        return true;
     }
 }

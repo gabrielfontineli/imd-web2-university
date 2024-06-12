@@ -1,16 +1,16 @@
 package com.imd.university.dto;
 
 import org.hibernate.validator.constraints.br.CPF;
-
 import com.imd.university.model.Genero;
+import jakarta.validation.constraints.Positive;
 
 public record ProfessorDTO(
     String nome,
     @CPF String cpf,
-    int matricula,
+    @Positive int matricula,
     String departamento,
     String dataNascimento,
     Genero genero,
-    float salario,
+    @Positive float salario,
     String disciplinaAssociada) {
 }  

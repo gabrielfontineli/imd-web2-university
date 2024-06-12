@@ -15,8 +15,13 @@ import com.imd.university.model.Professor;
 import com.imd.university.model.Turma;
 import com.imd.university.repository.TurmaRepository;
 
+import lombok.NoArgsConstructor;
+
 
 @Service
+@NoArgsConstructor
+
+
 public class TurmaService {
     @Autowired
     private TurmaRepository turmaRepository;
@@ -24,10 +29,6 @@ public class TurmaService {
     public TurmaService(TurmaRepository turmaRepository) {
         this.turmaRepository = turmaRepository;
     }
-    public TurmaService() {
-    }
-
-    // list all turmas
 
     public List<Turma> listTurmas() {
         return turmaRepository.findAll();

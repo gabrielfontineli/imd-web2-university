@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import org.hibernate.validator.constraints.br.CPF;
 import com.imd.university.model.Genero;
 
+import jakarta.validation.constraints.Positive;
+
 public record AlunoDTO(
     String nome,
     String id,
@@ -11,7 +13,7 @@ public record AlunoDTO(
     String cpf,
     LocalDate dataNascimento,
     String curso,
-    int matricula,
+    @Positive(message = "Matrícula inválida")int matricula,
     Genero genero
 ) {
 }

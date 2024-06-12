@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.imd.university.repository.ProfessorRepository;
+import com.imd.university.services.ProfessorService;
+
+import jakarta.validation.Valid;
+
 import com.imd.university.dto.ProfessorDTO;
 import com.imd.university.model.Professor;
 
@@ -26,55 +30,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ProfessorController {
 
     @Autowired
-    private ProfessorRepository professorRepository;
+    private ProfessorService professorService;
 
     @PostMapping("create")
-    public ResponseEntity<Professor> createProfessor(@RequestBody ProfessorDTO entity) {
-        Professor professor = new Professor(entity);
-        Professor savedProfessor = professorRepository.save(professor);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProfessor);
+    public ResponseEntity<Professor> insertProfessor(@Valid @RequestBody ProfessorDTO entity) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(professorService.createProfessor(entity));
     }
     @GetMapping
     public ResponseEntity<List<Professor>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(professorRepository.findAll());
+        return ResponseEntity.status(HttpStatus.OK).body(professorService.listProfessors());
     }
+
+    //testar 
     @GetMapping("/{id}")
     public ResponseEntity<Professor> getProfessor(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(professorRepository.findById(id).get());
+        return ResponseEntity.status(HttpStatus.OK).body(professorService.getProfessor(id));
     }
     @PutMapping("/{id}")
     public ResponseEntity<Professor> updateProfessor(@RequestBody ProfessorDTO entity, @PathVariable Long id) {
-        Optional<Professor> professorOptional = professorRepository.findById(id);
-        if (professorOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        Professor professor = professorOptional.get();
-        Optional.ofNullable(entity.nome()).ifPresent(professor::setNome);
-        if (entity.matricula() != 0) {
-            professor.setMatricula(entity.matricula());
-        }
-        if (entity.departamento() != null) {
-            professor.setDepartamento(entity.departamento());
-        }
-        if (entity.dataNascimento() != null) {
-            professor.setDataNascimento(entity.dataNascimento());
-        }
-        if (entity.genero() != null) {
-            professor.setGenero(entity.genero());
-        }
-        if (entity.salario() != 0) {
-            professor.setSalario(entity.salario());
-        }
-        if (entity.disciplinaAssociada() != null) {
-            professor.setDisciplinaAssociada(entity.disciplinaAssociada());
-        }
-        Professor updatedProfessor = professorRepository.save(professor);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedProfessor);
+        return ResponseEntity.status(HttpStatus.OK).body(professorService.updateProfessor(id, entity));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProfessor(@PathVariable Long id) {
-        professorRepository.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Professor deletado com sucesso");
+        if (professorService.deleteProfessor(id)) {
+            return ResponseEntity.status(HttpStatus.OK).body("Professor deletado com sucesso");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Professor não encontrado");
     }
 
 }

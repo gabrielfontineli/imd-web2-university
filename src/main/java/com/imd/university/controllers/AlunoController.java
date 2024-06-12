@@ -31,9 +31,8 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @PostMapping("/create")
-    public ResponseEntity<Aluno> createAluno(@Valid @RequestBody AlunoDTO entity) {
-        Aluno createdAluno = alunoService.createAluno(entity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdAluno);
+    public ResponseEntity<Aluno> insertAluno(@Valid @RequestBody AlunoDTO entity) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(alunoService.createAluno(entity));
     }
 
     @GetMapping
@@ -55,11 +54,19 @@ public class AlunoController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedAluno);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteAluno(@RequestParam Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAluno(@PathVariable Long id) {
         if (!alunoService.deleteAluno(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aluno não encontrado");
         }
         return ResponseEntity.status(HttpStatus.OK).body("Aluno deletado com sucesso");
     }
+    @DeleteMapping("/disable/{id}")
+    public ResponseEntity<String> disableAluno(@PathVariable Long id){
+        if(!alunoService.desativarAluno(id)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aluno não encontrado");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Aluno desativado com sucesso");
+    }
 }
+

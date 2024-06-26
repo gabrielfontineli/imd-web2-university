@@ -34,7 +34,7 @@ public class ProfessorService {
     public Optional<Professor> getProfessor(Long id) {
         return professorRepository.findById(id);
     }
-    public Professor updateProfessor(Long id, ProfessorDTO professorDTO) {
+    public Professor editProfessor(Long id, ProfessorDTO professorDTO) {
         Optional<Professor> isProfessor = professorRepository.findById(id);
         if (isProfessor.isEmpty()) {
             throw new RuntimeException("Professor não encontrado");

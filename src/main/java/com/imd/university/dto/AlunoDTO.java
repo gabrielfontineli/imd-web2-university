@@ -13,7 +13,8 @@ public record AlunoDTO(
     String cpf,
     LocalDate dataNascimento,
     String curso,
-    @Positive(message = "Matrícula inválida")int matricula,
+    @Positive(message = "Matrícula inválida")
+    int matricula,
     Genero genero
 ) {
 }
